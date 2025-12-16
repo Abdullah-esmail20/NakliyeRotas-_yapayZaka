@@ -12,98 +12,142 @@ Amaç fonksiyonu negatif toplam maliyeti temsil etmektedir. Bu nedenle fonksiyon
 Dolayısıyla bu projede amaç, verilen kısıtlar altında **amaç fonksiyonunu maksimize etmektir.**
 
 
-2. Matematiksel Model
-2.1. Amaç Fonksiyonu
+## 2. Matematiksel Model
+
+### 2.1. Amaç Fonksiyonu
+
 Projede kullanılan amaç fonksiyonu aşağıdaki gibidir:
 
-[ y(x_1, x_2) = -2x_1 - 3x_2 + 0.1 x_1 x_2 ]
+\[
+y(x_1, x_2) = -2x_1 - 3x_2 + 0.1 x_1 x_2
+\]
 
 Burada:
 
-( x_1 ): Ortalama hız (km/saat)
-( x_2 ): Araç yük kapasitesi (ton)
-Amaç:
-[ \max y(x_1, x_2) ]
+- \( x_1 \): Ortalama hız (km/saat)  
+- \( x_2 \): Araç yük kapasitesi (ton)
 
-y değerinin maksimum olduğu ( (x_1, x_2) ) kombinasyonu, lojistik firma için en uygun hız ve yük miktarını temsil etmektedir.
+Amaç:  
+\[
+\max y(x_1, x_2)
+\]
 
-3. Değişken Aralıkları ve Kısıtlar
-3.1. Değişken Aralıkları
-( 40 \le x_1 \le 100 ) → Ortalama hız aralığı (km/saat)
-( 2 \le x_2 \le 10 ) → Yük kapasitesi aralığı (ton)
-3.2. Kısıtlar
-Motor gücü limiti:
-[ x_1 \cdot x_2 \le 700 ]
+y değerinin maksimum olduğu \( (x_1, x_2) \) kombinasyonu, lojistik firma için en uygun hız ve yük miktarını temsil etmektedir.
 
-Minimum hız şartı:
-[ x_1 \ge 60 ]
 
-Genetik algoritma tasarlanırken, bu kısıtları sağlamayan çözümler geçersiz kabul edilmiş ve uygunluk hesabında cezalandırılmıştır.
+## 3. Değişken Aralıkları ve Kısıtlar
 
-4. Genetik Algoritma Tasarımı
+### 3.1. Değişken Aralıkları
+
+- \( 40 \le x_1 \le 100 \)  → Ortalama hız aralığı (km/saat)  
+- \( 2 \le x_2 \le 10 \)    → Yük kapasitesi aralığı (ton)
+
+### 3.2. Kısıtlar
+
+- **Motor gücü limiti:**  
+  \[
+  x_1 \cdot x_2 \le 700
+  \]
+
+- **Minimum hız şartı:**  
+  \[
+  x_1 \ge 60
+  \]
+
+Genetik algoritma tasarlanırken, bu kısıtları **sağlamayan çözümler geçersiz kabul edilmiş** ve uygunluk hesabında cezalandırılmıştır.
+
+
+## 4. Genetik Algoritma Tasarımı
+
 Bu bölümde, verilen problemi çözmek için kullanılan genetik algoritmanın bileşenleri açıklanmaktadır.
 
-4.1. Kromozom Gösterimi
+### 4.1. Kromozom Gösterimi
+
 Her bir birey (kromozom), iki gerçek sayıdan oluşmaktadır:
 
-[ text{Birey} = [x_1, x_2] ]
+\[
+text{Birey} = [x_1, x_2]
+\]
 
-( x_1 ): Ortalama hız
-( x_2 ): Yük kapasitesi
-4.2. Başlangıç Popülasyonu
-Başlangıç popülasyonu, rastgele üretilen ( x_1 ) ve ( x_2 ) değerleri ile oluşturulmuştur.
+- \( x_1 \): Ortalama hız  
+- \( x_2 \): Yük kapasitesi
+
+### 4.2. Başlangıç Popülasyonu
+
+Başlangıç popülasyonu, rastgele üretilen \( x_1 \) ve \( x_2 \) değerleri ile oluşturulmuştur.  
 Oluşturma sırasında:
 
-( x_1 ) değeri doğrudan ([60, 100]) aralığında seçilmiştir (minimum hız kısıtı baştan sağlanır).
-( x_2 ) değeri ise hem ([2, 10]) aralığına hem de ( x_1 \cdot x_2 \le 700 ) kısıtna uygun olacak şekilde seçilmiştir.
-4.3. Uygunluk (Fitness) Fonksiyonu
+- \( x_1 \) değeri doğrudan \([60, 100]\) aralığında seçilmiştir (minimum hız kısıtı baştan sağlanır).  
+- \( x_2 \) değeri ise hem \([2, 10]\) aralığına hem de \( x_1 \cdot x_2 \le 700 \) kısıtna uygun olacak şekilde seçilmiştir.
+
+### 4.3. Uygunluk (Fitness) Fonksiyonu
+
 Uygunluk fonksiyonu, doğrudan amaç fonksiyonunu kullanmaktadır:
 
-[ \text{fitness}(x_1, x_2) = y(x_1, x_2) ]
+\[
+\text{fitness}(x_1, x_2) = y(x_1, x_2)
+\]
 
 Eğer birey kısıtları sağlamıyorsa, çok büyük bir ceza verilerek:
 
-[ \text{fitness} = -10^9 ]
+\[
+\text{fitness} = -10^9
+\]
 
 olarak atanmıştır. Böylece geçersiz bireylerin seçilme olasılığı düşürülmüştür.
 
-4.4. Seçilim Operatörü (Tournament Selection)
-Seçilim için turnuva seçilimi (tournament selection) kullanılmıştır:
+### 4.4. Seçilim Operatörü (Tournament Selection)
 
-Rastgele (k) adet birey seçilir (bu projede (k=3)).
-Bu bireyler arasından en yüksek uygunluk değerine sahip olan ebeveyn olarak seçilir.
+Seçilim için **turnuva seçilimi (tournament selection)** kullanılmıştır:
+
+- Rastgele \(k\) adet birey seçilir (bu projede \(k=3\)).  
+- Bu bireyler arasından en yüksek uygunluk değerine sahip olan ebeveyn olarak seçilir.  
+
 Bu yöntem, hem iyi bireylerin seçilme olasılığını arttırır hem de çeşitliliği korur.
 
-4.5. Çaprazlama (Crossover)
+### 4.5. Çaprazlama (Crossover)
+
 Ebeveynler arasında aritmetik tabanlı bir çaprazlama uygulanmıştır:
 
-[ \text{çocuk}_1 = \alpha \cdot \text{ebeveyn}_1 + (1-\alpha) \cdot \text{ebeveyn}_2 ] [ \text{çocuk}_2 = (1-\alpha) \cdot \text{ebeveyn}_1 + \alpha \cdot \text{ebeveyn}_2 ]
+\[
+\text{çocuk}_1 = \alpha \cdot \text{ebeveyn}_1 + (1-\alpha) \cdot \text{ebeveyn}_2
+\]
+\[
+\text{çocuk}_2 = (1-\alpha) \cdot \text{ebeveyn}_1 + \alpha \cdot \text{ebeveyn}_2
+\]
 
-Burada ( \alpha ) rastgele ([0,1]) aralığından seçilen bir katsayıdır.
-Çaprazlama olasılığı ( p_c = 0.9 ) olarak kullanılmıştır.
+Burada \( \alpha \) rastgele \([0,1]\) aralığından seçilen bir katsayıdır.  
+Çaprazlama olasılığı \( p_c = 0.9 \) olarak kullanılmıştır.
 
-4.6. Mutasyon
-Mutasyon operatöründe, ( x_1 ) ve ( x_2 ) değerlerine Gauss gürültüsü eklenmiştir:
+### 4.6. Mutasyon
 
-( x_1 ) için ±5 civarında,
-( x_2 ) için ±1 civarında değişim uygulanmıştır.
-Mutasyon olasılığı ( p_m = 0.2 ) olarak seçilmiştir.
-Mutasyon sonrası birey, repair fonksiyonu ile tekrar geçerli aralıklara çekilmiştir.
+Mutasyon operatöründe, \( x_1 \) ve \( x_2 \) değerlerine **Gauss gürültüsü** eklenmiştir:
 
-4.7. Onarım (Repair) Fonksiyonu
-repair() fonksiyonu:
+- \( x_1 \) için ±5 civarında,  
+- \( x_2 \) için ±1 civarında değişim uygulanmıştır.
 
-( x_1 ) ve ( x_2 ) değerlerini tanımlı aralıklara kırpar,
-( x_1 \cdot x_2 \le 700 ) kısıtını ihlal ediyorsa, ( x_2 ) değerini düşürerek bu kısıtı sağlamaya çalışır.
+Mutasyon olasılığı \( p_m = 0.2 \) olarak seçilmiştir.  
+Mutasyon sonrası birey, `repair` fonksiyonu ile tekrar geçerli aralıklara çekilmiştir.
+
+### 4.7. Onarım (Repair) Fonksiyonu
+
+`repair()` fonksiyonu:
+
+- \( x_1 \) ve \( x_2 \) değerlerini tanımlı aralıklara kırpar,  
+- \( x_1 \cdot x_2 \le 700 \) kısıtını ihlal ediyorsa, \( x_2 \) değerini düşürerek bu kısıtı sağlamaya çalışır.
+
 Bu sayede popülasyondaki bireylerin büyük çoğunluğu kısıtlar altında kalır.
 
-4.8. Döngü Yapısı
+### 4.8. Döngü Yapısı
+
 Algoritma, belirli bir nesil sayısı boyunca (bu projede 150 nesil):
 
-Uygunluk değerlerini hesaplar,
-En iyi bireyi günceller,
-Yeni popülasyonu seçilim, çaprazlama ve mutasyon ile oluşturur.
-Her nesilde bulunan en iyi çözüm history listesinde saklanmıştır.
+1. Uygunluk değerlerini hesaplar,  
+2. En iyi bireyi günceller,  
+3. Yeni popülasyonu seçilim, çaprazlama ve mutasyon ile oluşturur.
+
+Her nesilde bulunan en iyi çözüm `history` listesinde saklanmıştır.
+
 
 import random
 import math
