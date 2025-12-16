@@ -248,7 +248,8 @@ plt.xlabel("Nesil")
 plt.ylabel("Fitness")
 plt.grid(True)
 plt.show()
-
+## 📈 Sonuç Grafiği
+![Fitness Evolution](results/fitness_evolution.png)
 En iyi çözüm genellikle kısıtların sınırında elde edilmiştir:
 
 ( x_1 \approx 60 ) km/saat
